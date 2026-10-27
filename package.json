@@ -1,34 +1,48 @@
 {
   "name": "bundlebee-import",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Peer-to-peer module imports over Hypercore",
-  "main": "index.js",
+  "main": "dist/index.cjs",
   "exports": {
     "./package": "./package.json",
     ".": {
-      "types": "./index.d.ts",
-      "default": "./index.js"
+      "types": "./dist/index.d.cts",
+      "default": "./dist/index.cjs"
+    },
+    "./types": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
     }
   },
   "files": [
-    "package.json",
-    "index.js",
-    "index.d.ts",
-    "lib/link.js"
+    "dist"
   ],
   "devDependencies": {
     "b4a": "^1.7.5",
-    "brittle": "^3.19.0",
+    "bare-fs": "^4.5.4",
+    "bare-path": "^3.0.0",
+    "bare-runtime": "1.34.0",
+    "bare-url": "^2.2.1",
+    "blind-peer": "3.10.2",
+    "blind-peering": "2.9.5",
+    "brittle": "^4.1.0",
     "corestore": "^7.8.0",
-    "lunte": "^1.2.0",
-    "prettier": "^3.6.2",
+    "lunte": "^1.8.4",
+    "prettier": "^3.9.6",
     "prettier-config-holepunch": "^2.0.0",
-    "z32": "^1.1.0"
+    "test-tmp": "^1.4.0",
+    "typescript": "^5.9.3"
   },
   "scripts": {
     "format": "prettier . --write",
-    "test": "brittle-bare test/index.js",
-    "lint": "prettier . --check && lunte"
+    "test": "npm run build && npm run test:node && npm run test:bare",
+    "test:node": "brittle-node test/node.mjs",
+    "test:bare": "brittle-bare test/all.mjs",
+    "test:generate": "brittle-make-test test/all.mjs test/selectors.js test/releases.js && brittle-make-test test/node.mjs test/selectors.js && prettier test/all.mjs test/node.mjs --write",
+    "test:types": "tsc --noEmit --strict --skipLibCheck --module NodeNext --moduleResolution NodeNext test/types.ts",
+    "lint": "prettier . --check && lunte",
+    "build": "node scripts/build.mjs",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -41,7 +55,17 @@
   },
   "homepage": "https://github.com/holepunchto/bundlebee-import",
   "dependencies": {
-    "bundlebee": "^1.1.1",
-    "pear-link": "^4.2.1"
-  }
+    "bare-abort-controller": "^1.1.2",
+    "bare-semver": "^1.1.0",
+    "bundlebee": "^2.0.0",
+    "hypercore-id-encoding": "^1.3.0",
+    "hyperdht": "^6.29.0",
+    "hyperswarm": "^4.17.2",
+    "pear-link": "^4.2.1",
+    "safety-catch": "^1.0.3"
+  },
+  "engines": {
+    "bare": ">=1.34.0"
+  },
+  "types": "dist/index.d.cts"
 }
